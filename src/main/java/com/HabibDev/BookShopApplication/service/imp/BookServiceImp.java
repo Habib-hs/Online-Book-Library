@@ -1,10 +1,12 @@
 package com.HabibDev.BookShopApplication.service.imp;
 
 import com.HabibDev.BookShopApplication.entity.BookEntity;
+import com.HabibDev.BookShopApplication.exception.custom.BookNotFoundException;
 import com.HabibDev.BookShopApplication.model.BookRequestModel;
 import com.HabibDev.BookShopApplication.repository.BookRepository;
 import com.HabibDev.BookShopApplication.service.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,21 +26,59 @@ public class BookServiceImp implements BookService {
     //Book Creation Implementation
     @Override
     public ResponseEntity<Object> addBook(BookRequestModel requestModel) {
+        if (requestModel == null || !isValidRequestModel(requestModel)) {
+            throw new IllegalArgumentException("Invalid book request");
+        }
+
         BookEntity bookEntity = BookEntity.builder()
                 .title(requestModel.getTitle())
                 .author(requestModel.getAuthor())
                 .price(requestModel.getPrice())
                 .pageCount(requestModel.getPageCount())
                 .build();
-        BookEntity savedBookEntity = bookRepository.save(bookEntity);
-        return new ResponseEntity<>(savedBookEntity, HttpStatus.CREATED);
+        bookRepository.save(bookEntity);
+
+        // If the save operation is successful, return a success message
+        return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
     }
+
+//validate the book creation
+private boolean isValidRequestModel(BookRequestModel requestModel) {
+    // Check if name is not null and not empty
+    if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty()) {
+        return false;
+    }
+
+    // Check if author is not null and not empty
+    if (requestModel.getAuthor() == null || requestModel.getAuthor().isEmpty()) {
+        return false;
+    }
+
+    // Check if price is not null and greater than zero
+    if (requestModel.getPrice() == null || requestModel.getPrice() <= 0) {
+        return false;
+    }
+
+    // Check if pageCount is not null and greater than zero
+    if (requestModel.getPageCount() == null || requestModel.getPageCount() <= 0) {
+        return false;
+    }
+
+    // All validations passed
+    return true;
+}
+
 
 
     // For getting all the books Implementation
     @Override
     public ResponseEntity<Object> getAllBooks() {
-        Iterable<BookEntity> books = bookRepository.findAll();
+        List<BookEntity> books = bookRepository.findAll();
+
+        if (books.isEmpty()) {
+            throw new BookNotFoundException("No books found");
+        }
+
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 

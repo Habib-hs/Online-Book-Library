@@ -1,7 +1,5 @@
 
 package com.HabibDev.BookShopApplication.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import lombok.*;
 
 @Data

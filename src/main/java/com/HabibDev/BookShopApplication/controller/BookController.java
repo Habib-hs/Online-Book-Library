@@ -17,12 +17,12 @@ public class BookController {
 
     //create a book
     @PostMapping("/create")
-    public ResponseEntity<Object> createBook(@RequestBody BookRequestModel requestModel) {
+    public ResponseEntity<Object> addBook(@RequestBody BookRequestModel requestModel) {
         return bookService.addBook(requestModel);
     }
 
     //get a book
-    @GetMapping("/book/{bookId}")
+    @GetMapping("/id/{bookId}")
     public ResponseEntity<Object>getBookById(@PathVariable Integer bookId){
         return bookService.getBook(bookId);
     }
