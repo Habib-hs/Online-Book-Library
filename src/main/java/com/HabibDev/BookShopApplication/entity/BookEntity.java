@@ -11,18 +11,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Book")
+@Table(name = "Books")
 public class BookEntity {
     @Id
     @GeneratedValue
     private Integer bookId;
     private String title;
     private String author;
+    private String details;
     private Integer price;
     private Integer pageCount;
-
-
-
-
 }
 

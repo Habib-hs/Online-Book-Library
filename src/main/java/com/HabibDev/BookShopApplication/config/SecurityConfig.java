@@ -32,8 +32,15 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers("/books/create","/books/update/{bookId}","/books/delete/{bookId}").hasAuthority("ADMIN")
                 .requestMatchers("/books/all","/author/{authorName}/{bookName}","/books/id/{bookId}","/author/{authorName}").hasAnyAuthority("CUSTOMER","ADMIN")
-
-                /*
+                .anyRequest()
+                .authenticated()
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+          /*
                 .requestMatchers("/books/id/**").hasAnyAuthority("ADMIN", "CUSTOMER")
                 .requestMatchers("/books/all").hasAnyAuthority("ADMIN", "CUSTOMER")
                 .requestMatchers("/books/author/**").hasAnyAuthority("ADMIN", "CUSTOMER")
@@ -44,17 +51,10 @@ public class SecurityConfig {
                  .requestMatchers("/user/update").hasAuthority("USER")
                .requestMatchers("/user/delete").hasAuthority("ADMIN")
                  .requestMatchers("/user/update").hasAnyAuthority("admin","user")
-                  */
+                 */
 
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         ;
         return http.build();
     }
 }
+

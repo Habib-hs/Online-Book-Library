@@ -7,14 +7,12 @@ import com.HabibDev.BookShopApplication.model.BookRequestModel;
 import com.HabibDev.BookShopApplication.repository.BookRepository;
 import com.HabibDev.BookShopApplication.service.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -23,17 +21,17 @@ public class BookServiceImp implements BookService {
 
     private final BookRepository bookRepository;
 
-    //Book Creation Implementation
+    //Creating a new Book
     @Override
     public ResponseEntity<Object> addBook(BookRequestModel requestModel) {
 
         //checking all the books field are valid or not
         if (requestModel == null || requestModel.getTitle() == null || requestModel.getAuthor() == null ||
-                requestModel.getPrice() == null || requestModel.getPageCount() == null) {
+                requestModel.getPrice() == null ||   requestModel.getPrice() <=0 || requestModel.getPageCount() == null) {
             throw new IllegalArgumentException("Invalid book request! Please provide valid credentials.");
         }
 
-        // checking if book is already exist or not
+        // checking if book is already exist
         if (bookRepository.existsByTitleAndAuthor(requestModel.getTitle(), requestModel.getAuthor())) {
             throw new IllegalArgumentException("Book already exists");
         }
@@ -42,6 +40,7 @@ public class BookServiceImp implements BookService {
                 .title(requestModel.getTitle())
                 .author(requestModel.getAuthor())
                 .price(requestModel.getPrice())
+                .details(requestModel.getDetails())
                 .pageCount(requestModel.getPageCount())
                 .build();
         bookRepository.save(bookEntity);
@@ -50,35 +49,8 @@ public class BookServiceImp implements BookService {
         return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
     }
 
-    //validate the book creation
-    private boolean isValidRequestModel(BookRequestModel requestModel) {
-        // Check if name is not null and not empty
-        if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty()) {
-            return false;
-        }
 
-        // Check if author is not null and not empty
-        if (requestModel.getAuthor() == null || requestModel.getAuthor().isEmpty()) {
-            return false;
-        }
-
-        // Check if price is not null and greater than zero
-        if (requestModel.getPrice() == null || requestModel.getPrice() <= 0) {
-            return false;
-        }
-
-        // Check if pageCount is not null and greater than zero
-        if (requestModel.getPageCount() == null || requestModel.getPageCount() <= 0) {
-            return false;
-        }
-
-        // All validations passed
-        return true;
-    }
-
-
-
-    // For getting all the books Implementation
+    // Get All the Books
     @Override
     public ResponseEntity<Object> getAllBooks() {
         List<BookEntity> books = bookRepository.findAll();
@@ -89,7 +61,7 @@ public class BookServiceImp implements BookService {
     }
 
 
-    //For Delete a particular Book Implementation
+    // Delete a Book
 
     @Override
     public ResponseEntity<Object> deleteBook(Integer bookId) {
@@ -101,8 +73,7 @@ public class BookServiceImp implements BookService {
     }
 
 
-
-    // for getting a book details - Implementation
+    // Getting Book Details
     @Override
     public ResponseEntity<Object> getBook(Integer bookId) {
         Optional<BookEntity> bookOptional = bookRepository.findById(bookId);
@@ -116,8 +87,7 @@ public class BookServiceImp implements BookService {
     }
 
 
-
-    //For Searching all the books by author Name - Implementation
+    // Searching Book by Author Name
     public ResponseEntity<Object> getBooksByAuthor(String authorName) {
         List<BookEntity> books = bookRepository.findByAuthor(authorName);
         if (books.isEmpty()) {
@@ -128,10 +98,7 @@ public class BookServiceImp implements BookService {
     }
 
 
-
-
-    //for getting a book using author and book title Implementation
-
+    //Getting Book by Author and Book's title
     @Override
     public ResponseEntity<Object> getBooksByAuthorAndTitle(String authorName, String title) {
         BookEntity bookEntity = bookRepository.findByAuthorAndTitle(authorName, title);
@@ -143,7 +110,7 @@ public class BookServiceImp implements BookService {
     }
 
 
-    //For Updating a Book - Implementation
+    //Update Book
     @Override
     public ResponseEntity<Object> update(Integer bookId, BookRequestModel requestModel) {
         Optional<BookEntity> optionalBook = bookRepository.findById(bookId);
@@ -154,6 +121,7 @@ public class BookServiceImp implements BookService {
             // Update the book entity with the new values from the request model
             bookEntity.setTitle(requestModel.getTitle());
             bookEntity.setAuthor(requestModel.getAuthor());
+            bookEntity.setDetails(requestModel.getDetails());
             bookEntity.setPrice(requestModel.getPrice());
             bookEntity.setPageCount(requestModel.getPageCount());
 

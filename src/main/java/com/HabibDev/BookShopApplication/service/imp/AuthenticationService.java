@@ -1,5 +1,4 @@
 package com.HabibDev.BookShopApplication.service.imp;
-
 import com.HabibDev.BookShopApplication.entity.UserEntity;
 import com.HabibDev.BookShopApplication.exception.custom.AuthenticationException;
 import com.HabibDev.BookShopApplication.exception.custom.RegistrationException;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
