@@ -21,7 +21,7 @@ public class BookEntity {
     private Integer price;
     private Integer pageCount;
 
-    // Add more properties as needed
+
 
 
 }

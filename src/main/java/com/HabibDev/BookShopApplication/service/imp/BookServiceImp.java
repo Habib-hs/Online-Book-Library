@@ -1,6 +1,7 @@
 package com.HabibDev.BookShopApplication.service.imp;
 
 import com.HabibDev.BookShopApplication.entity.BookEntity;
+import com.HabibDev.BookShopApplication.exception.custom.AuthorNotFoundException;
 import com.HabibDev.BookShopApplication.exception.custom.BookNotFoundException;
 import com.HabibDev.BookShopApplication.model.BookRequestModel;
 import com.HabibDev.BookShopApplication.repository.BookRepository;
@@ -22,12 +23,19 @@ public class BookServiceImp implements BookService {
 
     private final BookRepository bookRepository;
 
-
     //Book Creation Implementation
     @Override
     public ResponseEntity<Object> addBook(BookRequestModel requestModel) {
-        if (requestModel == null || !isValidRequestModel(requestModel)) {
-            throw new IllegalArgumentException("Invalid book request");
+
+        //checking all the books field are valid or not
+        if (requestModel == null || requestModel.getTitle() == null || requestModel.getAuthor() == null ||
+                requestModel.getPrice() == null || requestModel.getPageCount() == null) {
+            throw new IllegalArgumentException("Invalid book request! Please provide valid credentials.");
+        }
+
+        // checking if book is already exist or not
+        if (bookRepository.existsByTitleAndAuthor(requestModel.getTitle(), requestModel.getAuthor())) {
+            throw new IllegalArgumentException("Book already exists");
         }
 
         BookEntity bookEntity = BookEntity.builder()
@@ -42,31 +50,31 @@ public class BookServiceImp implements BookService {
         return new ResponseEntity<>("Book added successfully", HttpStatus.CREATED);
     }
 
-//validate the book creation
-private boolean isValidRequestModel(BookRequestModel requestModel) {
-    // Check if name is not null and not empty
-    if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty()) {
-        return false;
-    }
+    //validate the book creation
+    private boolean isValidRequestModel(BookRequestModel requestModel) {
+        // Check if name is not null and not empty
+        if (requestModel.getTitle() == null || requestModel.getTitle().isEmpty()) {
+            return false;
+        }
 
-    // Check if author is not null and not empty
-    if (requestModel.getAuthor() == null || requestModel.getAuthor().isEmpty()) {
-        return false;
-    }
+        // Check if author is not null and not empty
+        if (requestModel.getAuthor() == null || requestModel.getAuthor().isEmpty()) {
+            return false;
+        }
 
-    // Check if price is not null and greater than zero
-    if (requestModel.getPrice() == null || requestModel.getPrice() <= 0) {
-        return false;
-    }
+        // Check if price is not null and greater than zero
+        if (requestModel.getPrice() == null || requestModel.getPrice() <= 0) {
+            return false;
+        }
 
-    // Check if pageCount is not null and greater than zero
-    if (requestModel.getPageCount() == null || requestModel.getPageCount() <= 0) {
-        return false;
-    }
+        // Check if pageCount is not null and greater than zero
+        if (requestModel.getPageCount() == null || requestModel.getPageCount() <= 0) {
+            return false;
+        }
 
-    // All validations passed
-    return true;
-}
+        // All validations passed
+        return true;
+    }
 
 
 
@@ -74,11 +82,9 @@ private boolean isValidRequestModel(BookRequestModel requestModel) {
     @Override
     public ResponseEntity<Object> getAllBooks() {
         List<BookEntity> books = bookRepository.findAll();
-
         if (books.isEmpty()) {
             throw new BookNotFoundException("No books found");
         }
-
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
@@ -87,13 +93,14 @@ private boolean isValidRequestModel(BookRequestModel requestModel) {
 
     @Override
     public ResponseEntity<Object> deleteBook(Integer bookId) {
-        if (bookRepository.existsById(bookId)) {
-            bookRepository.deleteById(bookId);
-            return new ResponseEntity<>("Book deleted successfully", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
+        if (!bookRepository.existsById(bookId)) {
+            throw new IllegalArgumentException("There is no such book");
         }
+        bookRepository.deleteById(bookId);
+        return new ResponseEntity<>("Book deleted successfully", HttpStatus.OK);
     }
+
+
 
     // for getting a book details - Implementation
     @Override
@@ -104,31 +111,32 @@ private boolean isValidRequestModel(BookRequestModel requestModel) {
             BookEntity book = bookOptional.get();
             return new ResponseEntity<>(book, HttpStatus.OK);
         } else {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Book not found");
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            throw new BookNotFoundException("Book not found");
         }
     }
 
 
+
     //For Searching all the books by author Name - Implementation
-    @Override
     public ResponseEntity<Object> getBooksByAuthor(String authorName) {
         List<BookEntity> books = bookRepository.findByAuthor(authorName);
         if (books.isEmpty()) {
-            return new ResponseEntity<>("No books found for author: " + authorName, HttpStatus.NOT_FOUND);
+            throw new AuthorNotFoundException("Author not found: " + authorName);
         } else {
             return new ResponseEntity<>(books, HttpStatus.OK);
         }
     }
 
 
+
+
     //for getting a book using author and book title Implementation
+
     @Override
     public ResponseEntity<Object> getBooksByAuthorAndTitle(String authorName, String title) {
         BookEntity bookEntity = bookRepository.findByAuthorAndTitle(authorName, title);
         if (bookEntity == null) {
-            return new ResponseEntity<>("No books found for author: " + authorName, HttpStatus.NOT_FOUND);
+            throw new BookNotFoundException("No book found for author: " + authorName + " and title: " + title);
         } else {
             return new ResponseEntity<>(bookEntity, HttpStatus.OK);
         }
@@ -154,7 +162,7 @@ private boolean isValidRequestModel(BookRequestModel requestModel) {
 
             return new ResponseEntity<>(updatedBook, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
+            throw new BookNotFoundException("Book's Id not matched. Please provide valid book id");
         }
     }
 

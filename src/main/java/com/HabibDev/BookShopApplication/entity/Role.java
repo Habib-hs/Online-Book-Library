@@ -1,6 +1,6 @@
 package com.HabibDev.BookShopApplication.entity;
 
 public enum Role {
-    USER,
+    CUSTOMER,
     ADMIN;
 }
