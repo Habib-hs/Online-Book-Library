@@ -18,7 +18,6 @@ Online Book Library is a Spring Boot Security app with two roles: Customer and A
 - BCrypt
 - Gradle
 - MySql
-  \*Hibernath
 
 ## Getting Started
 
@@ -77,4 +76,3 @@ User do have the access to see all the books, particular book and different kind
 As user do not have the access to create,update and delete a book. here I provide jwt token of a admin now we can do all the task as a Admin.
 ![adm-21](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/720d9ab9-1592-47e3-a5e3-ab891e404de0)
 ![adm-update-22](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/891cf095-09e6-43c9-9ea6-4e3b2b72e1c1)
-![adm-delete-23](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/46076d89-04ec-413f-a851-cba81b924680)
