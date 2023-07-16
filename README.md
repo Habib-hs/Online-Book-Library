@@ -1,42 +1,45 @@
 # Online-Book-Library
+
 Online Book Library is a Spring Boot Security app with two roles: Customer and Admin. Customer can browse and search the book, while Admins can manage the library
 
 ## Features
-* User registration and login with JWT authentication
-* Password encryption using BCrypt
-* Role-based authorization with Spring Security
-* Customized access denied handling
-* Do some Crud Operation of Book
 
+- User registration and login with JWT authentication
+- Password encryption using BCrypt
+- Role-based authorization with Spring Security
+- Customized access denied handling
+- Do some Crud Operation of Book
 
 ## Technologies
-* Spring Boot 3.0
-* Spring Security
-* JSON Web Tokens (JWT)
-* BCrypt
-* Gradle
-* MySql
- 
+
+- Spring Boot 3.0
+- Spring Security
+- JSON Web Tokens (JWT)
+- BCrypt
+- Gradle
+- MySql
+  \*Hibernath
+
 ## Getting Started
+
 To get started with this project, you will need to have the following installed on your local machine:
 
-* JDK 17+
-* Gradle 3+
-
+- JDK 17+
+- Gradle 3+
 
 To build and run the project, follow these steps:
 
-* Clone the repository: `git clone https://github.com/mhabib1234/Online-Book-Library.git`
-* Navigate to the project directory: cd Online-Book-Library
-* Add database "security-module" to MySql 
-* Build the project: gradle clean install
-* Run the project: gradle bootRun or you can run via your preferred IDE's RUN/PLAY button
+- Clone the repository: `git clone https://github.com/mhabib1234/Online-Book-Library.git`
+- Navigate to the project directory: cd Online-Book-Library
+- Add database "security-module" to MySql
+- Build the project: gradle clean install
+- Run the project: gradle bootRun or you can run via your preferred IDE's RUN/PLAY button
 
 -> The application will be available at http://localhost:9090.
 
 ## Some Screenshot of the project
 
-User Can register providing necessary Data 
+User Can register providing necessary Data
 
 ![reg1](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/b5c69e50-6f8b-42b2-989f-27d963b9cc59)
 
@@ -52,8 +55,8 @@ If Email or password is not valid.
 
 ![log4](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/27cf8345-49cf-4692-996b-504e09af2708)
 
- To access protected url, we need to send the jwt token to the header.
- 
+To access protected url, we need to send the jwt token to the header.
+
 ![bearer5](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/30f61aa0-5d12-4a80-9115-ee61ca9ee509)
 
 User do not have the access to create,update and delete a book.
@@ -64,7 +67,6 @@ Update:
 ![cus-update-12](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/23b631c6-1117-4bfa-96bd-47400e377d63)
 Delete:
 ![cus-delete-13](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/d30f6ce3-1f21-485a-97dc-dfd73d87d4ba)
-
 
 User do have the access to see all the books, particular book and different kinds of search. Note that, Admin can do the same task too.
 ![cus-singlebook-14](https://github.com/mhabib1234/Online-Book-Library/assets/131146437/7b545c4d-0b3b-45d5-9698-441b6cc5c882)
